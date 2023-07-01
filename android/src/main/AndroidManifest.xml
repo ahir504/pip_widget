@@ -1,0 +1,22 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.intileo.pip_widget">
+
+<application>
+    <activity
+        android:name="com.intileo.pip_widget.NewFlutterActivity"
+        android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+        android:exported="true"
+        android:hardwareAccelerated="true"
+        android:supportsPictureInPicture="true"
+        android:windowSoftInputMode="adjustResize"
+        android:persistent="true"
+        android:enabled="true"
+        android:launchMode="singleInstance"
+        tools:targetApi="n">
+    </activity>
+
+
+</application>
+
+</manifest>

@@ -1,7 +1,7 @@
 name: pip_widget
 description: this plugin give you true control over the PIP
 version: 0.0.1
-homepage:
+homepage: https://github.com/ahir504/pip_widget.git
 
 environment:
   sdk: '>=3.0.2 <4.0.0'

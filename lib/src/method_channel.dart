@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/services.dart';
@@ -10,9 +11,11 @@ class MethodChannelPiPWidget extends PiPWidgetPlatform{
   final methodChannel = const MethodChannel('com.intileo.pip_widget');
 
   @override
-  Future<bool> launchPIPActivity(String routeName) async {
-
-   return await methodChannel.invokeMethod('start_pip_activity',routeName);
+  Future<bool> launchPIPActivity({required String initialRouteName, List<String>? arguments}) async {
+   return await methodChannel.invokeMethod('start_pip_activity',{
+     "initialRouteName" : initialRouteName,
+     "arguments" : arguments
+   });
   }
 
   @override

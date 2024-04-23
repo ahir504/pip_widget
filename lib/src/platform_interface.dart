@@ -22,7 +22,7 @@ abstract class PiPWidgetPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<bool> launchPIPActivity(String routeName){
+  Future<bool> launchPIPActivity({required String initialRouteName, List<String>? arguments}){
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
 

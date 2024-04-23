@@ -12,8 +12,8 @@ class PipWidget {
   }) : _probeInterval = probeInterval;
 
 
-  Future<bool> launchPIPActivity({String routeName = "/"}) async {
-    return await PiPWidgetPlatform.instance.launchPIPActivity(routeName);
+  Future<bool> launchPIPActivity({required String initialRouteName, List<String>? arguments}) async {
+    return await PiPWidgetPlatform.instance.launchPIPActivity(initialRouteName: initialRouteName, arguments: arguments);
   }
 
   Stream<PiPWidgetStatus> get pipStatus$ {

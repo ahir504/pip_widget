@@ -3,7 +3,7 @@ import UIKit
 
 public class PipWidgetPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "pip_widget", binaryMessenger: registrar.messenger())
+    let channel = FlutterMethodChannel(name: "'com.intileo.pip_widget'", binaryMessenger: registrar.messenger())
     let instance = PipWidgetPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }

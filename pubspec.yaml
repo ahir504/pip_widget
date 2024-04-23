@@ -1,6 +1,6 @@
 name: pip_widget
 description: this plugin give you true control over the PIP
-version: 0.0.1
+version: 0.0.6
 homepage: https://github.com/ahir504/pip_widget.git
 
 environment:

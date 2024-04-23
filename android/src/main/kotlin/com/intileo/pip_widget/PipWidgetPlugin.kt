@@ -1,5 +1,6 @@
 package com.intileo.pip_widget
 
+import android.annotation.TargetApi
 import android.app.Activity
 import android.app.PictureInPictureParams
 import android.content.Context
@@ -40,13 +41,15 @@ class PipWidgetPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   }
 
 
+
   @RequiresApi(Build.VERSION_CODES.O)
   override fun onMethodCall(call: MethodCall, result: Result) {
     when (call.method) {
         "start_pip_activity" -> {
-          val rouatName = call.arguments as String
-          val args = listOf(rouatName)
-          val intent = NewFlutterActivity.withNewEngine().dartEntrypointArgs(args).build(context)
+          val params = call.arguments as Map<*, *>
+          val initialRouteName = params["initialRouteName"] as String //call.arguments("initialRouteName") ?: "/"
+          val arguments =  params["arguments"] as List<String>? //call.arguments("arguments") ?: ""
+          val intent = NewFlutterActivity.withNewEngine().initialRoute(initialRouteName).dartEntrypointArgs(arguments!!).build(context)
 //          val intent = Intent(context, NewFlutterActivity::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
           context.startActivity(intent)
@@ -88,16 +91,14 @@ class PipWidgetPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
           pipParams.setAutoEnterEnabled(true)
           pipParams.setSeamlessResizeEnabled(true)
         }
-        result.success(
-          activity.enterPictureInPictureMode(pipParams.build())
-
-        )
+        result.success(activity.enterPictureInPictureMode(pipParams.build()))
       }
-            "onBackPressed" -> {
+
+      "onBackPressed" -> {
         activity.finishAndRemoveTask()
       }
         else -> {
-          result.error("1", "PiP Activity Is Not Launched", "to call this method first call launchPIPActivity() with arguments")
+          result.error("1", "PiP Activity Is Not Launched", "to call this method first call launchPIPActivity() with initialRouteName and arguments")
         }
     }
   }

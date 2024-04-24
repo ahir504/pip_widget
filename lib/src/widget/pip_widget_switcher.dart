@@ -1,5 +1,6 @@
 part of pip_widget;
 
+
 class PiPWidgetSwitcher extends StatefulWidget {
   final PipWidget? pipWidget;
   final Widget childWhenEnabled;

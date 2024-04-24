@@ -1,7 +1,7 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/services.dart';
-import 'package:pip_widget/src/pip_status.dart';
 import 'package:pip_widget/src/platform_interface.dart';
 
 import '../pip_widget.dart';

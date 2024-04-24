@@ -65,7 +65,6 @@ class PipWidgetPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             activity.isInPictureInPictureMode
           )
         }
-
       "enterPIP" -> {
         val pipParams = PictureInPictureParams.Builder()
         pipParams.setAspectRatio(
@@ -93,7 +92,6 @@ class PipWidgetPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         }
         result.success(activity.enterPictureInPictureMode(pipParams.build()))
       }
-
       "onBackPressed" -> {
         activity.finishAndRemoveTask()
       }

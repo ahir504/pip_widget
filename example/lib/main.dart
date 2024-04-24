@@ -1,63 +1,51 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:pip_widget/pip_widget.dart';
-
-void main() {
+import 'package:pip_widget_example/screens/NonPiPScreen.dart';
+import 'package:pip_widget_example/screens/PiPScreen.dart';
+PipWidget pipWidget = PipWidget();
+List<String>? newArgs;
+void main(List<String> args) {
+  newArgs = args;
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class MyApp extends StatelessWidget{
+   const MyApp({super.key});
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
 
-class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-  final _pipWidgetPlugin = PipWidget();
-
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
+  List<Route<dynamic>> onGenerateInitialRoutes(String initialRouteName) {
+    List<Route<dynamic>> pageStack = [];
+    switch(initialRouteName){
+      case "/":
+          pageStack.add(MaterialPageRoute(builder: (_) => const NonPiPScreen()));
+          break;
+      case "/pipScreen":
+          pageStack.add(MaterialPageRoute(builder: (_) => PiPScreen(args: newArgs!)));
+          break;
+    }
+    return pageStack;
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-
-          // await _pipWidgetPlugin.getPlatformVersion() ?? 'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+  Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+    switch(settings.name){
+      case "/":
+        return MaterialPageRoute(builder: (_) => const NonPiPScreen());
+      case "/pipScreen":
+        return MaterialPageRoute(builder: (_) => PiPScreen(args: newArgs));
+      default:
+        return MaterialPageRoute(builder: (_) => const NonPiPScreen());
     }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
-        ),
-      ),
+      title: 'PiP Widget Example',
+      navigatorKey: navigatorKey,
+      onGenerateInitialRoutes: onGenerateInitialRoutes,
+      onGenerateRoute: onGenerateRoute,
+      theme: ThemeData(primaryColor: Colors.deepPurpleAccent),
     );
   }
 }

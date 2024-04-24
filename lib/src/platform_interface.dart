@@ -2,6 +2,7 @@
 import 'dart:math';
 
 import 'package:pip_widget/src/method_channel.dart';
+import 'package:pip_widget/src/pip_status.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import '../pip_widget.dart';

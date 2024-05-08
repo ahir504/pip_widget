@@ -1,9 +1,14 @@
 part of pip_widget;
 
 class PipWidget {
-  final Duration? _probeInterval;
+  static PipWidget? _apiSingelton;
+
+  PipWidget._();
+  static PipWidget get instance => _apiSingelton ??= PipWidget._();
+
+  Duration? _probeInterval;
   Timer? _timer;
-  final _controller = StreamController<PiPWidgetStatus>();
+  StreamController<PiPWidgetStatus> _controller = StreamController<PiPWidgetStatus>();
   Stream<PiPWidgetStatus>? _stream;
 
 
@@ -18,7 +23,7 @@ class PipWidget {
 
   Stream<PiPWidgetStatus> get pipStatus$ {
     _timer ??= Timer.periodic(
-      _probeInterval!,
+      _probeInterval ?? Duration(milliseconds: 100),
           (_) async => _controller.add(await pipStatus),
     );
     _stream ??= _controller.stream.asBroadcastStream();

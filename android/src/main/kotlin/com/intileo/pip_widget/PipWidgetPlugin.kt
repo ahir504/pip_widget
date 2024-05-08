@@ -11,6 +11,7 @@ import android.os.Build
 import android.util.Log
 import android.util.Rational
 import android.view.Window
+import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.startActivity
@@ -32,7 +33,7 @@ class PipWidgetPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
   private lateinit var channel : MethodChannel
   private lateinit var context: Context
-  private lateinit var activity: Activity
+  private var activity: Activity? = null
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "com.intileo.pip_widget")
@@ -42,6 +43,7 @@ class PipWidgetPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
 
 
+  @TargetApi(Build.VERSION_CODES.O)
   @RequiresApi(Build.VERSION_CODES.O)
   override fun onMethodCall(call: MethodCall, result: Result) {
     when (call.method) {
@@ -52,17 +54,36 @@ class PipWidgetPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
           val intent = NewFlutterActivity.withNewEngine().initialRoute(initialRouteName).dartEntrypointArgs(arguments!!).build(context)
 //          val intent = Intent(context, NewFlutterActivity::class.java)
           intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-          context.startActivity(intent)
+          Log.d("activity", activity.toString())
+          Toast.makeText(context, activity.toString(), Toast.LENGTH_LONG).show()
+          if(activity != null){
+            activity!!.finishAndRemoveTask()
+            val timer: Thread = object : Thread() {
+              override fun run() {
+                try {
+                  sleep(500)
+                  context.startActivity(intent)
+                } catch (e: InterruptedException) {
+                  e.printStackTrace()
+                }
+              }
+            }
+            timer.start()
+          }else{
+            context.startActivity(intent)
+          }
+
+
           result.success(true)
         }
         "pipAvailable" -> {
           result.success(
-            activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+            activity!!.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
           )
         }
         "inPipAlready" -> {
           result.success(
-            activity.isInPictureInPictureMode
+            activity!!.isInPictureInPictureMode
           )
         }
       "enterPIP" -> {
@@ -90,10 +111,10 @@ class PipWidgetPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
           pipParams.setAutoEnterEnabled(true)
           pipParams.setSeamlessResizeEnabled(true)
         }
-        result.success(activity.enterPictureInPictureMode(pipParams.build()))
+        result.success(activity!!.enterPictureInPictureMode(pipParams.build()))
       }
       "onBackPressed" -> {
-        activity.finishAndRemoveTask()
+        activity!!.finishAndRemoveTask()
       }
         else -> {
           result.error("1", "PiP Activity Is Not Launched", "to call this method first call launchPIPActivity() with initialRouteName and arguments")
@@ -125,6 +146,9 @@ class PipWidgetPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
   @RequiresApi(Build.VERSION_CODES.N)
   fun useBinding(binding: ActivityPluginBinding) {
-    activity = binding.activity
+    if(binding.activity::class.java == NewFlutterActivity::class.java){
+      activity = binding.activity
+    }
+
   }
 }
